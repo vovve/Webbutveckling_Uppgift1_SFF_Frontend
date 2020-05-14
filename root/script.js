@@ -84,4 +84,37 @@ function showLogInPage()
         });    
     });
 }
+//__________________________________________________________________
 
+var filmList = document.getElementById("Filmer");
+
+printFilmList();
+
+function printFilmList()
+{
+fetch("https://localhost:5001/api/Film")
+    .then(function(response)
+    {
+        return response.json();
+    })
+    .then(function(json)
+    {
+        console.log("printFilmList", json);
+
+        for (i=0; i<json.length; i++)
+        {
+            console.log(json[i].name);
+            filmList.insertAdjacentHTML("beforeend", "<div>>button>" + json[i].name + "</button></div>")
+        };
+    });
+};
+
+function addItem()
+{
+
+};
+
+function deleteItem()
+{
+
+}
