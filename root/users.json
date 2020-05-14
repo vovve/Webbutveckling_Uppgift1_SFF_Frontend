@@ -1,0 +1,18 @@
+[
+    {
+        "userName": "Mia Kling",
+        "userLogin": "mia",
+        "userPassword": "1234"
+    },
+    {
+        "userName": "Karin Johansson",
+        "userLogin": "karin",
+        "userPassword": "4321"
+    },
+    {
+        "userName": "Evert Bank",
+        "userLogin": "evert",
+        "userPassword": "1342"
+    }
+
+]
