@@ -1,3 +1,4 @@
+// Log in functions
 console.log(localStorage.getItem("userId"));
 
 var page = document.getElementById("content");
@@ -14,7 +15,7 @@ else
 function showWelcomePage()
 {
     page.innerHTML = "";
-    var print = "Hej och välkommen "; 
+    var print = "Välkommen "; 
 
     fetch("users.json")
     .then(function(response)
@@ -23,7 +24,7 @@ function showWelcomePage()
     })
     .then(function(json)
     {
-        print = print + json[localStorage.getItem("userId")].userName;
+        print = print + json[localStorage.getItem("userId")].userName + "!";
         page.insertAdjacentHTML("afterbegin", print);
 
     });
@@ -85,21 +86,15 @@ function showLogInPage()
     });
 }
 //__________________________________________________________________
+// Method to print a list of films
 
 var filmList = document.getElementById("filmlist");
-var saveButton = document.getElementById("savefilmTitle");
-
-saveButton.addEventListener("click", function()
-{
-    filmTitle = document.getElementById("filmtitle").value;
-    addItem(filmTitle, 0);
-});
 
 printfilmList();
 
 function printfilmList()
 {
-fetch("https://localhost:5001/api/Film")
+    fetch("https://localhost:5001/api/Film")
     .then(function(response)
     {
         return response.json();
@@ -107,26 +102,33 @@ fetch("https://localhost:5001/api/Film")
     .then(function(json)
     {
         console.log("printfilmList", json);
-
+        
         filmList.innerHTML = "";
-
-        for (i=0; i<json.length; i++)
+        
+        for (i=0; i < json.length; i++)
         {
             console.log(json[i].name);
-            filmList.insertAdjacentHTML("beforeend", "<div>button onclick='deleteItem(" + json[i].id +  ")'>" + json[i].name + "</button></div>")
-        };
+            filmList.insertAdjacentHTML("beforeend", "<div><button>" + json[i].name + "</button></div>")
+        }
     });
 };
 
-//addItem("Mary stewart", 0);
 
-function addItem(filmTitle, iscomplete)
+// Method to add and save a new filmstudio
+var saveButton = document.getElementById("savefilmStudio");
+saveButton.addEventListener("click", function()
+{
+    Filmstudio = document.getElementById("Filmstudio").value;
+    addItem(Filmstudio, fyra);
+});
+
+function addItem(Name, Password, Verified)
 {
     console.log("Lägg till")
 
-    var data = { filmTitle: filmTitle, iscomplete: iscomplete};
+    var data = { Name: Name, Password: Password, Verified: Verified};
 
-    fetch('https://localhost:5001/api/Film',  
+    fetch('https://localhost:5001/api/filmstudio',  
     {
         method: 'POST', 
         headers: 
@@ -139,7 +141,6 @@ function addItem(filmTitle, iscomplete)
     .then(data  => 
     {
         console.log('sucsess:' + data);
-        printfilmList();
     })
     .catch((error) => 
     {
@@ -148,11 +149,16 @@ function addItem(filmTitle, iscomplete)
     
 };
 
+// Method to delete a movie
+
 function deleteItem()
 {
     console.log("Radera", id)
 
-    fetch('https://localhost:5001/api/Film/' + id, {method: 'DELETE', })
+    fetch('https://localhost:5001/api/Film/' + id, 
+    {
+        method: 'DELETE', 
+    })
     .then(response => response.json())
     .then(response => printfilmList())
 }
