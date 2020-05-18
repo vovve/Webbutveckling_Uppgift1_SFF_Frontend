@@ -60,4 +60,40 @@ body{
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
   }
+
+/* Flexbox */
+  .wrapper{
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+ }
+ .flex-container{
+    display: flex;
+    background-color: cadetblue;
+    flex-flow: wrap;
+ }
+ .box{
+    height: 200px;
+    min-width: 350px;
+    /*max-width: 300px;*/
+    font-size: 30px;
+    text-align: center;
+ }
+ .one{
+    background-color: rgba(50, 148, 240, 0.623);
+    flex-grow: 1;
+ }
+ .two{
+    background-color: rgba(50, 148, 240, 0.979);
+    flex-grow: 1;
+ }
+ .three{
+    background-color: rgba(109, 176, 238, 0.712);
+    flex-grow: 1;
+ }
+ .four{
+    background-color: rgba(142, 196, 247, 0.623);
+    flex-grow: 1;
+ }
+ 
  

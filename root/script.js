@@ -1,7 +1,7 @@
 // Log in functions
 console.log(localStorage.getItem("userId"));
 
-var page = document.getElementById("content");
+var login = document.getElementById("content");
 
 if (localStorage.getItem("userId") !== "null")
 {
@@ -14,7 +14,7 @@ else
 
 function showWelcomePage()
 {
-    page.innerHTML = "";
+    login.innerHTML = "";
     var print = "Välkommen "; 
 
     fetch("users.json")
@@ -25,11 +25,11 @@ function showWelcomePage()
     .then(function(json)
     {
         print = print + json[localStorage.getItem("userId")].userName + "!";
-        page.insertAdjacentHTML("afterbegin", print);
+        login.insertAdjacentHTML("afterbegin", print);
 
     });
 
-    page.insertAdjacentHTML("beforeend", "<div><button id ='loggoutButton'>Logga ut</button></div>")
+    login.insertAdjacentHTML("beforeend", "<div><button id ='loggoutButton'>Logga ut</button></div>")
 
     var loggoutButton = document.getElementById("loggoutButton");
     
@@ -42,13 +42,13 @@ function showWelcomePage()
 
 function showErrorPage()
 {
-    page.insertAdjacentHTML("afterbegin", "<div>Har du glömt ditt lösenord?</div>");
+    login.insertAdjacentHTML("afterbegin", "<div>Har du glömt ditt lösenord?</div>");
 }
 
 function showLogInPage()
 {
-    page.innerHTML = "";
-    page.insertAdjacentHTML("afterbegin", 'Användarnamn: <input type="text" id="user"> Lösenord: <input type="password" id="password"> <button id="spara">Logga in</button>');
+    login.innerHTML = "";
+    login.insertAdjacentHTML("afterbegin", 'Användarnamn: <input type="text" id="user"> Lösenord: <input type="password" id="password"> <button id="spara">Logga in</button>');
 
     var loginButton = document.getElementById("spara");
 
@@ -108,7 +108,7 @@ function printfilmList()
         for (i=0; i < json.length; i++)
         {
             console.log(json[i].name);
-            filmList.insertAdjacentHTML("beforeend", "<div><button>" + json[i].name + "</button></div>")
+            filmList.insertAdjacentHTML("beforeend", "<div><button onclick = 'deleteItem(" + json[i].id + ")'>" + json[i].name + "</button></div>")
         }
     });
 };
@@ -118,40 +118,41 @@ function printfilmList()
 var saveButton = document.getElementById("savefilmStudio");
 saveButton.addEventListener("click", function()
 {
-    Filmstudio = document.getElementById("Filmstudio").value;
-    addItem(Filmstudio, fyra);
+   Filmstudio = document.getElementById("Filmstudio").value;
+   addItem(Filmstudio, fyra);
 });
-
+ 
 function addItem(Name, Password, Verified)
 {
-    console.log("Lägg till")
-
-    var data = { Name: Name, Password: Password, Verified: Verified};
-
-    fetch('https://localhost:5001/api/filmstudio',  
-    {
-        method: 'POST', 
-        headers: 
-        {
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data  => 
-    {
-        console.log('sucsess:' + data);
-    })
-    .catch((error) => 
-    {
-        console.error('error', error);
-    });
-    
+   console.log("Lägg till")
+ 
+   var data = { Name: Name, Password: Password, Verified: Verified};
+ 
+   fetch('https://localhost:5001/api/filmstudio', 
+   {
+       method: 'POST',
+       headers:
+       {
+           'content-type': 'application/json',
+       },
+       body: JSON.stringify(data),
+   })
+   .then(response => response.json())
+   .then(data  =>
+   {
+       console.log('sucsess:' + data);
+   })
+   .catch((error) =>
+   {
+       console.error('error', error);
+   });
+  
 };
+
 
 // Method to delete a movie
 
-function deleteItem()
+function deleteItem(id)
 {
     console.log("Radera", id)
 
