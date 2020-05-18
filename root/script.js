@@ -86,11 +86,18 @@ function showLogInPage()
 }
 //__________________________________________________________________
 
-var filmList = document.getElementById("Filmer");
+var filmList = document.getElementById("filmlist");
+var saveButton = document.getElementById("savefilmTitle");
 
-printFilmList();
+saveButton.addEventListener("click", function()
+{
+    filmTitle = document.getElementById("filmtitle").value;
+    addItem(filmTitle, 0);
+});
 
-function printFilmList()
+printfilmList();
+
+function printfilmList()
 {
 fetch("https://localhost:5001/api/Film")
     .then(function(response)
@@ -99,22 +106,53 @@ fetch("https://localhost:5001/api/Film")
     })
     .then(function(json)
     {
-        console.log("printFilmList", json);
+        console.log("printfilmList", json);
+
+        filmList.innerHTML = "";
 
         for (i=0; i<json.length; i++)
         {
             console.log(json[i].name);
-            filmList.insertAdjacentHTML("beforeend", "<div>>button>" + json[i].name + "</button></div>")
+            filmList.insertAdjacentHTML("beforeend", "<div>button onclick='deleteItem(" + json[i].id +  ")'>" + json[i].name + "</button></div>")
         };
     });
 };
 
-function addItem()
-{
+//addItem("Mary stewart", 0);
 
+function addItem(filmTitle, iscomplete)
+{
+    console.log("Lägg till")
+
+    var data = { filmTitle: filmTitle, iscomplete: iscomplete};
+
+    fetch('https://localhost:5001/api/Film',  
+    {
+        method: 'POST', 
+        headers: 
+        {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data  => 
+    {
+        console.log('sucsess:' + data);
+        printfilmList();
+    })
+    .catch((error) => 
+    {
+        console.error('error', error);
+    });
+    
 };
 
 function deleteItem()
 {
+    console.log("Radera", id)
 
+    fetch('https://localhost:5001/api/Film/' + id, {method: 'DELETE', })
+    .then(response => response.json())
+    .then(response => printfilmList())
 }
