@@ -1,32 +1,47 @@
-*
-{
-  box-sizing: border-box;
-}
-
 body{
+    /*background-image: url(root/img/bio.jpg);*/
     background-color: rgba(245, 141, 13, 0.514);
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
     margin: 0px;
     padding: 0px;
+    margin-left: 160px; /* Same as the width of the sidebar */
 }
-
 .login{
-    border: 3px solid rgba(47, 95, 255, 0.767);
-    background-color: rgba(19, 131, 236, 0.781);
+    border: 7px solid rgba(245, 141, 13, 0);
+    background-color: rgba(245, 141, 13, 0.007);
     color: black;
     margin: 10px;
     padding: 10px;
 }
- 
- table, th, td
-{
-   border: 2px solid black;
-   border-collapse: collapse;
+.newlogin{
+    border: 7px solid rgba(245, 141, 13, 0);
+    background-color: rgba(245, 141, 13, 0.007);
+    color: black;
+    margin: 10px;
+    padding: 10px;
 }
-
-/* The sidebar menu */
+.movieposter{
+    border: 1px solid rgba(209, 121, 14, 0.877);
+    height: 150px;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    flex-flow: wrap;    
+    font-size: 30px;
+    flex-grow: 1;
+}
+.contact{
+    border: 1px solid rgba(209, 121, 14, 0.877);
+    height: 150px;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    flex-flow: wrap;    
+    font-size: 30px;
+    flex-grow: 1;
+}
 .sidenav {
     height: 100%; /* Full-height: remove this if you want "auto" height */
     width: 160px; /* Set the width of the sidebar */
@@ -34,66 +49,31 @@ body{
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
-    background-color: rgba(250, 246, 246, 0.884);
+    background-color: rgba(250, 236, 191, 0.603);
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
-  }
-   /* The navigation menu links */
-  .sidenav a {
+}
+/* The navigation menu links */
+.sidenav span {
     padding: 6px 8px 6px 16px;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 30px;
     color: #414040;
     display: block;
-  }
-   /* When you mouse over the navigation links, change their color */
-  .sidenav a:hover {
+}
+/* When you mouse over the navigation links, change their color */
+.sidenav span:hover {
     color: #c0bbbb;
-  }
-   /* Style page content */
-  .main {
-    margin-left: 160px; /* Same as the width of the sidebar */
-    padding: 0px 10px;
-  }
-   /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
-  @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
-  }
-
-/* Flexbox */
-  .wrapper{
+}
+.wrapper{
     width: 100%;
     max-width: 960px;
-    margin: 0 auto;
- }
- .flex-container{
+}
+.flex-container{
     display: flex;
-    background-color: cadetblue;
-    flex-flow: wrap;
- }
- .box{
-    height: 200px;
-    min-width: 350px;
-    /*max-width: 300px;*/
-    font-size: 30px;
-    text-align: center;
- }
- .one{
-    background-color: rgba(50, 148, 240, 0.623);
-    flex-grow: 1;
- }
- .two{
-    background-color: rgba(50, 148, 240, 0.979);
-    flex-grow: 1;
- }
- .three{
-    background-color: rgba(109, 176, 238, 0.712);
-    flex-grow: 1;
- }
- .four{
-    background-color: rgba(142, 196, 247, 0.623);
-    flex-grow: 1;
- }
+    border: 7px solid rgba(245, 141, 13, 0);
+    background-color: rgba(245, 141, 13, 0);
+}
+
  
  

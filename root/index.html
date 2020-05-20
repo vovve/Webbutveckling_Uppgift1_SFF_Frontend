@@ -4,37 +4,23 @@
     <link rel = "stylesheet" type="text/css" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
 </head> 
-<center>
-<header>
-    <font size="+2" color="black" face="georgia">
-    <h1>SFF Filmuthyrning</h1>   
-    <div class="login" id="content"></div>     
-</header>
-</center>
-<div <!-- Side navigation -->
-    <div class="sidenav">
-    <a href="#">Logga in</a>
-    <a href="#">Skapa ett konto</a>
-    <a href="#">Topplistan</a>
-    <a href="#">Hyr</a>
-    <a href="https://www.imdb.com/"target="_blank" style="color: rgb(70, 85, 248);">Sök på Imdb</a>
-</div>
-<center>
 <body> 
-    <h12>Inte registrerad? Fyll i ort och välj ett lösenord. Tryck sedan på "Skapa ett konto"</h12> 
-    <input type="text" id = "filmTitle"><button id ="savefilmStudio">Lägg till ny filmstudio</button>
-    <font size="+2" color="black" face="georgia">
-    <h1>Topplistan</h1> 
-    <h5>Välj film att hyra:</h5>
-    <div ></div>
-    <div class="wrapper">
-        <div class="flex-container">
-            <div class="box one" id="filmlist"></div>      
-        </div>   
-     
-    <script src= "script.js" ></script>
+<div class="sidenav">
+<span id="login">Logga in</span>
+<span id="movies">Filmer</span>
+<span id="contact">Kontakt</span>
+</div> 
+<center>
+<font size="+3" color="black" face="georgia">
+<h1>SFF Filmuthyrning</h1>
+<div class="wrapper">
+<div class="login" id="content"></div>
+<div class="newlogin" id="content"></div>
+<div class="flex-container" id="filmlist"></div> 
+</div>
+    <input type="text" id = "newlogin"><button id ="savefilmStudio">Lägg till ny filmstudio</button>
+    <script src="script.js"></script>
 </body>
 </center>
 </html>
