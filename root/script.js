@@ -23,17 +23,22 @@ function showLogInPage(){
         })
         .then(function(json){
             for(i=0; i<json.length; i++){
-                if (getUser == json[i].Name && getPass == json[i].Password){    
+                console.log(getUser, getPass);
+                if (getUser == json[i].name && getPass == json[i].password){    
                     console.log("Ja det stämmer")                   
                     localStorage.setItem("userId", i);
-                }             
-                if(localStorage.getItem("userId") !== null){
+                } 
+                else{
+                    console.log("stämmer inte",json[i].name, json[i].password);
+                }            
+
+            }
+            if (localStorage.getItem("userId") !== null){
                 showWelcomePage();
                 }
-                else{
+            else{
                 showErrorPage();
                 }
-            }
         });    
     });
 }
@@ -50,8 +55,8 @@ function showWelcomePage(){
     .then(function(json){
         page.innerHTML = "";
         print = print + json[localStorage.getItem("userId")].userName + "!";
-        page.insertAdjacentHTML("afterbegin", "<center><div>" + print + "</div></center>");
-        page.insertAdjacentHTML("beforeend", "<center><div><button id ='loggoutButton'>Logga ut</button></div></center>");
+        page.insertAdjacentHTML("afterbegin", "<center><div>" + print + "</div></center><center><div><button id ='loggoutButton'>Logga ut</button></div></center>");
+        //page.insertAdjacentHTML("beforeend", );
     });
     
     var loggoutButton = document.getElementById("loggoutButton");
@@ -115,11 +120,15 @@ function printfilmList(){
         
         for (i = 0; i < json.length; i++){
             console.log(json[i].name);
-            filmlist.insertAdjacentHTML("beforeend", '<div class = "movieposter">' + json[i].name + '</div>', 
-            '<img src="wwwroot/img/bio.jpg "alt="placeholder för omslagsbild" width="25%" height="25%">');
+            filmList.insertAdjacentHTML("beforeend",
+            '<div class = "movieposter"><img src="img/bio.jpg" alt="placeholder för omslagsbild" width="25%" height="25%"><br/><span id = "'+ json[i].id +'" >' + json[i].name + '</span></div>');
         }
     });
 }
+
+filmList.addEventListener("click", function(e){
+    console.log( e.target );
+})
 
 var triviaList = document.getElementById("trivialist");
 
