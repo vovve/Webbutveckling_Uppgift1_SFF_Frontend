@@ -55,8 +55,8 @@ function showWelcomePage(){
     .then(function(json){
         page.innerHTML = "";
         print = print + json[localStorage.getItem("userId")].userName + "!";
-        page.insertAdjacentHTML("afterbegin", "<center><div>" + print + "</div></center><center><div><button id ='loggoutButton'>Logga ut</button></div></center>");
-        //page.insertAdjacentHTML("beforeend", );
+        page.insertAdjacentHTML("afterbegin", "<center><div>" + print);
+        page.insertAdjacentHTML("beforeend",  "</div></center><center><div><button id ='loggoutButton'>Logga ut</button></div></center>");
     });
     
     var loggoutButton = document.getElementById("loggoutButton");
@@ -70,15 +70,18 @@ function showWelcomePage(){
 var newlogin = document.getElementById("newlogin");
 
 newlogin.addEventListener("click", function(){
+    console.log("Klick på nytt login");
     addItem();
 });
 
-function addItem(Name, Password, Verified){
+var addlogin = document.getElementById("content")
+
+function addItem(Name, Password){
     console.log("Lägg till");
-    newlogin.insertAdjacentHTML("afterbegin", 
-    '<center>Användarnamn: <input type="text" id="user"> Lösenord: <input type="password" id="password"> <button id="spara">Spara</button></center>');
+    addlogin.insertAdjacentHTML("afterbegin", 
+    '<center>Välj användarnamn: <input type="text" id="user"> Välj lösenord: <input type="password" id="password"> <button id="spara">Spara</button></center>');
     
-    var data = { Name: Name, Password: Password, Verified: Verified};
+    var data = { Name: Name, Password: Password};
     newlogin = document.getElementById("newlogin").value;
      
     fetch('https://localhost:5001/api/filmstudio',{
@@ -121,14 +124,18 @@ function printfilmList(){
         for (i = 0; i < json.length; i++){
             console.log(json[i].name);
             filmList.insertAdjacentHTML("beforeend",
-            '<div class = "movieposter"><img src="img/bio.jpg" alt="placeholder för omslagsbild" width="25%" height="25%"><br/><span id = "'+ json[i].id +'" >' + json[i].name + '</span></div>');
+            '<div class = "movieposter"><img src="img/bio.jpg" alt="omslagsbild" width="25%" height="25%"><br/><span id = "' + json[i].id + '" >' + json[i].name + '</span></div>');
         }
+        filmList.addEventListener("click", function(e){
+        console.log(e.target.id);
+        //showMovieInfoPage(e.target.id)
+        })
     });
 }
 
-filmList.addEventListener("click", function(e){
-    console.log( e.target );
-})
+function showMovieInfoPage(){
+
+}
 
 var triviaList = document.getElementById("trivialist");
 
@@ -145,11 +152,12 @@ function printtriviaList(movieId){
         for (i=0; i < json.length; i++){
             if(movieId == json[i].FilmId){
                 console.log(json[i].trivia);
-                trivialist.insertAdjacentHTML("beforeend", '<div class = "movieposter">' + json[i].trivia + '</div>');
+                //trivialist.insertAdjacentHTML("beforeend", '<div class = "movieposter">' + json[i].trivia + '</div>');
             }            
         }
     });
 }
+
 // Method to rent and return (delete) a movie
 function rentedFilm(){
     fetch("https://localhost:5001/api/rentedFilm")
@@ -186,10 +194,9 @@ var page = document.getElementById("content");
 var contact = document.getElementById("contact");
 
 contact.addEventListener("click", function(){
-    console.log("Klick på kontaktknappen");
     printContactInfo();
 });
 
 function printContactInfo(){
-    page.insertAdjacentHTML("afterbegin", '<center><div class = "contact">Kontakta oss</div></center>');
+    page.insertAdjacentHTML("afterbegin", '<center><div class = "contact">Kontakta oss<br/>SFF@sverige.se</div></center>');
 }
