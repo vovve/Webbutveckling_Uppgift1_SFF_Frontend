@@ -2,10 +2,9 @@ var page = document.getElementById("content");
 var login = document.getElementById("login");
 
 login.addEventListener("click", function(){
-    console.log("Klick på knappen");
     showLogInPage();
 });
-// Log in functions
+// To Login
 function showLogInPage(){
     page.innerHTML = "";
     page.insertAdjacentHTML("afterbegin", 
@@ -46,7 +45,7 @@ function showErrorPage(){
     page.insertAdjacentHTML("afterbegin", "<div>Har du glömt ditt lösenord?</div>");
 }
 function showWelcomePage(){
-    var print = "Välkommen "; 
+    var print = "Välkommen till Sveriges Förenade Filmstudios!"; 
     
     fetch("users.json")
     .then(function(response){
@@ -54,30 +53,20 @@ function showWelcomePage(){
     })
     .then(function(json){
         page.innerHTML = "";
-        print = print + json[localStorage.getItem("userId")].userName + "!";
         page.insertAdjacentHTML("afterbegin", "<center><div>" + print);
-        page.insertAdjacentHTML("beforeend",  "</div></center><center><div><button id ='loggoutButton'>Logga ut</button></div></center>");
-    });
-    
-    var loggoutButton = document.getElementById("loggoutButton");
-    
-    loggoutButton.addEventListener("click", function(){
-        localStorage.removeItem("userId");
-        showLogInPage();
     });
 }
 
+// To add a new studio
 var newlogin = document.getElementById("newlogin");
 
 newlogin.addEventListener("click", function(){
-    console.log("Klick på nytt login");
     addItem();
 });
 
 var addlogin = document.getElementById("content")
 
 function addItem(Name, Password){
-    console.log("Lägg till");
     addlogin.insertAdjacentHTML("afterbegin", 
     '<center>Välj användarnamn: <input type="text" id="user"> Välj lösenord: <input type="password" id="password"> <button id="spara">Spara</button></center>');
     
@@ -99,16 +88,13 @@ function addItem(Name, Password){
            console.error('error', error);
         });  
 }
-
 //-------------------------------------------------------------------------------
-// Method to print a list of films and trivia
+// To print a list of films and trivia
 
 var movies = document.getElementById("movies");
 
 movies.addEventListener("click", function(){
-    console.log("Klick på filmknappen");
     printfilmList();
-    printtriviaList();
 });
 
 var filmList = document.getElementById("filmlist");
@@ -120,6 +106,7 @@ function printfilmList(){
     })
     .then(function(json){
         console.log("printfilmList", json);
+        filmList.innerHTML="";
         
         for (i = 0; i < json.length; i++){
             console.log(json[i].name);
@@ -128,19 +115,29 @@ function printfilmList(){
         }
         filmList.addEventListener("click", function(e){
         console.log(e.target.id);
-        //showMovieInfoPage(e.target.id)
+        showMovieInfoPage(e.target.id)
         })
     });
 }
 
-function showMovieInfoPage(){
-
+function showMovieInfoPage(movieId){
+    fetch("https://localhost:5001/api/film/" + movieId)
+    .then(function(response){
+        console.log(response);
+        return response.json();
+    })
+    .then(function(json){
+        console.log("showMovieInfoPage", json);
+        filmList.innerHTML="";
+        filmList.insertAdjacentHTML("beforeend",
+        '<div class = "movieposter"><img src="img/bio.jpg" alt="omslagsbild" width="25%" height="25%"><br/><span id = "' + json.id + '" >' + json.name + '</span><div><button onclick = "rentedFilm(' + json.id + ')">Hyr film</button><button>Skriv trivia</button><button>Lämna tillbaka film</button></div></div>');            printtriviaList(json.id);
+    });
 }
 
 var triviaList = document.getElementById("trivialist");
 
 function printtriviaList(movieId){
-    console.log(movieId);
+    console.log("Visa trivia", movieId);
 
     fetch("https://localhost:5001/api/filmTrivia")
     .then(function(response){
@@ -150,34 +147,46 @@ function printtriviaList(movieId){
         console.log("printtriviaList", json);
         
         for (i=0; i < json.length; i++){
-            if(movieId == json[i].FilmId){
+            if(movieId == json[i].filmId){
                 console.log(json[i].trivia);
-                //trivialist.insertAdjacentHTML("beforeend", '<div class = "movieposter">' + json[i].trivia + '</div>');
+                filmList.insertAdjacentHTML("beforeend", 
+                '<div class = "movieposter"><span>' + json[i].trivia + '</span></div>');
             }            
         }
     });
 }
-
 // Method to rent and return (delete) a movie
-function rentedFilm(){
-    fetch("https://localhost:5001/api/rentedFilm")
-    .then(function(response)
-    {
-        return response.json();
-    })
-    .then(function(json)
-    {
-        console.log("rentedFilm", json);
-        
-        for (i=0; i < json.length; i++)
-        {
+
+movies = document.getElementById("movies")
+
+function rentedFilm(movieId, userId){
+    console.log("hyr film", movieId);
+    console.log("Inloggad", localStorage.getItem("userId"));
+
+    var data = { FilmId : movieId, StudioId : userId };
+    movies = document.getElementById("movies").value;
+
+    fetch("https://localhost:5001/api/rentedFilm"), {
+        method: 'POST', 
+        headers:{
+            'content-type': 'application/json',
+           },
+        body: JSON.stringify(data),
+    }
+    .then(response => response.json())
+    .then(data  =>{
+        for (i=0; i < json.length; i++){
             if(movieId == json[i].FilmId){
                 console.log(json[i].Id);
-                rentedFilm.insertAdjacentHTML("beforeend", "<div>onclick = 'deleteItem(" + json[i].id + ")'>" + json[i].id + '</div>');
+                rentedFilm.insertAdjacentHTML("beforeend", "<div>onclick = 'returnMovie(" + json[i].id + ")'>" + json[i].id + '</div>');
             }            
         }
-    });
-}
+       console.log('success:' + data);
+    })
+    .catch((error) =>{
+       console.error('error', error);
+    }); 
+} 
 
 function returnMovie(id){
     console.log("Returnera", id);
@@ -190,6 +199,7 @@ function returnMovie(id){
 }
 
 //-------------------------------------------------------------------------------
+// Contact info page
 var page = document.getElementById("content");
 var contact = document.getElementById("contact");
 
