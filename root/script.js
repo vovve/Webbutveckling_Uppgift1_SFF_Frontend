@@ -12,7 +12,7 @@ var login = document.getElementById("login");
 var isLoggedIn = false;
 
 login.addEventListener("click", function () {
-  if (localStorage.getItem("userId") !== null) {
+  if (localStorage.getItem("userId") === null) {
     showLogInPage();
     loginUser();
   } else {
@@ -121,7 +121,8 @@ movies.addEventListener("click", function () {
 var filmList = document.getElementById("filmlist");
 
 function printfilmList() {
-  page.innerHTML = "";
+  filmList.innerHTML = "";
+  trivialist.innerHTML = "";
   fetch("https://localhost:5001/api/film")
     .then(function (response) {
       return response.json();
@@ -132,21 +133,26 @@ function printfilmList() {
         console.log(json[i].name);
         filmList.insertAdjacentHTML(
           "beforeend",
-          '<div class = "movieposter"><img src="img/bio.jpg" alt="omslagsbild" width="25%" height="25%"><br/><span id = "' +
-            json[i].id +
-            '" >' +
+          '<div class = "movieposter" id="' + json[i].id + '"><img src="img/bio.jpg" alt="omslagsbild" width="25%" height="25%"><br/>' +
             json[i].name +
-            "</span></div>"
+            "</div>"
         );
       }
       filmList.addEventListener("click", function(e) {
-        console.log(e.target.id);
-        showMovieInfoPage(e.target.id);
+        console.log("target", e.target.id);
+
+        // Kollar så att vi har ett target.id innan vi kallar på funktionen så att vi inte skickar iväg ett undefined.
+          if (e.target.id !== "") {
+            showMovieInfoPage(e.target.id);
+          }
       });
     });
 }
 
 function showMovieInfoPage(movieId) {
+
+  trivialist.innerHTML = "";
+
   fetch("https://localhost:5001/api/film/" + movieId)
     .then(function (response) {
       console.log(response);
@@ -174,33 +180,44 @@ function showMovieInfoPage(movieId) {
 var triviaList = document.getElementById("trivialist");
 
 function printtriviaList(movieId) {
-  triviaList.innerHTML = "";
   console.log("Visa trivia", movieId);
 
-  fetch("https://localhost:5001/api/filmTrivia/" + movieId)
+  trivialist.innerHTML = "";
+
+  // Här skall vi inte skicka in id för vi skall hämta all data, och sedan filtrera den i fronten.
+  fetch("https://localhost:5001/api/filmTrivia/")
     .then(function (response) {
       return response.json();
     })
     .then(function (json) {
-      triviaList.insertAdjacentHTML(
-        "beforeend",
-        '<div class = "movieposter"><span>' + json.trivia + "</span></div>"
-      );
+
+      // for loop för att loopa igenom trivia listan.
+      for (i=0; i<json.length; i++) {
+
+        // Här skulle vi kunna köra en filter funktion för att filtrera arrayn till enbart den trivia som hör till filmen, men jag illustrerar med en IF nu:
+        if (json[i].filmId === movieId) {
+          trivialist.insertAdjacentHTML(
+            "beforeend",
+            '<div class = "movieposter"><span>' + json[i].trivia + "</span></div>"
+          );
+        }
+      }
     });
 }
 
 // Method to rent and return (delete) a movie and post new trivia
 var rentMovie = document.getElementById("rentAMovie");
 
-function rentAMovie(movieId, userId) {
-  triviaList.innerHTML = "";
+function rentAMovie(movieId) {
   console.log("hyr film", movieId);
   console.log("Inloggad", localStorage.getItem("userId"));
 
+  var userId = localStorage.getItem("userId");
   
   var data = { FilmId: movieId, FilmstudioId: userId };
 
-  fetch("https://localhost:5001/api/rentedFilm/" + movieId, {
+  // I denna post behöver vi inte skicka in id, eftersom vi lägger till en ny "rad" i databasen, inte gör något med en befintlig rad som med PUT.
+  fetch("https://localhost:5001/api/rentedFilm/", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -210,11 +227,17 @@ function rentAMovie(movieId, userId) {
       .then((response) => response.json())
       .then((data) => {
         console.log("success:", data);
+
+        // Här anropar jag funktionen för att skriva ut filminfo sidan igen efter att vi har hyrt en film för att "uppdatera" sidan. 
+        // Här skulle man även kunna ge någon feedback till användaren i framtiden att en film har hyrts.
+        showMovieInfoPage(movieId);
       })
       .catch((error) => {
         console.error("error", error);
       });
-    }
+
+}
+
 
 function returnMovie(id) {
   console.log("Returnera", id);
@@ -226,31 +249,38 @@ function returnMovie(id) {
     .then((response) => rentedFilm());
 }
 
-function addTrivia(movieid, text) {
+function addTrivia(movieid) {
+  
+  // Du döper den inkommande värdet till funktionen till movieid, men sedan i länken så försökte du skriva ut variabeln movieId = lätt att missa men ställer till med en del problem.
+
+  console.log("addTrivia");
+
   page.innerHTML = "";
+  trivialist.innerHTML = "";
   page.insertAdjacentHTML(
     "beforeend",
-    `<div class="form" id="SaveTrivia">  <textarea id="triviaTextarea" rows="4" cols="50">Skriv din text här...</textarea><button onclick="SaveTrivia(${movieId})" type="submit" class="btn" id="btnSaveTrivia">Spara</button></div>`
+    `<div class="form" id="SaveTrivia">  <textarea id="triviaTextarea" rows="4" cols="50">Skriv din text här...</textarea><button onclick="SaveTrivia(${movieid})" type="submit" class="btn" id="btnSaveTrivia">Spara</button></div>`
   );
 
-  var data = { FilmId: movieid, Trivia: text };
-  newTrivia = document.getElementById("SaveTrivia").value;
+      // var data = { FilmId: movieid, Trivia: text };
+      
+      // newTrivia = document.getElementById("SaveTrivia").value;
 
-  fetch("https://localhost:5001/api/filmtrivia" + id, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("success:" + data);
-    })
-    .catch((error) => {
-      console.error("error", error);
-    });
-}
+      // fetch("https://localhost:5001/api/filmtrivia", {
+      //   method: "POST",
+      //   headers: {
+      //     "content-type": "application/json",
+      //   },
+      //   body: JSON.stringify(data),
+      // })
+      //   .then((response) => response.json())
+      //   .then((data) => {
+      //     console.log("success:" + data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("error", error);
+      //   });
+  }
 
 //-------------------------------------------------------------------------------
 // Contact info page
