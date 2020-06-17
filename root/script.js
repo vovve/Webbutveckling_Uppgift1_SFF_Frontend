@@ -174,6 +174,7 @@ function showMovieInfoPage(movieId) {
 var triviaList = document.getElementById("trivialist");
 
 function printtriviaList(movieId) {
+  triviaList.innerHTML = "";
   console.log("Visa trivia", movieId);
 
   fetch("https://localhost:5001/api/filmTrivia/" + movieId)
@@ -181,7 +182,7 @@ function printtriviaList(movieId) {
       return response.json();
     })
     .then(function (json) {
-      filmList.insertAdjacentHTML(
+      triviaList.insertAdjacentHTML(
         "beforeend",
         '<div class = "movieposter"><span>' + json.trivia + "</span></div>"
       );
@@ -192,6 +193,7 @@ function printtriviaList(movieId) {
 var rentMovie = document.getElementById("rentAMovie");
 
 function rentAMovie(movieId, userId) {
+  triviaList.innerHTML = "";
   console.log("hyr film", movieId);
   console.log("Inloggad", localStorage.getItem("userId"));
 
